@@ -12,7 +12,7 @@ namespace Msz2001.Analytics.PageSurvival
             if (args.Length < 2)
             {
                 Console.WriteLine();
-                Console.WriteLine("Usage: Msz2001.Analytics.Retention <wikiDB> <outputDir>");
+                Console.WriteLine("Usage: Msz2001.Analytics.Retention <wikiDB> <outputFile>");
                 Console.WriteLine();
                 Console.WriteLine("  wikiDB     - name of the wiki database to process");
                 Console.WriteLine("  outputFile - where to save the result file");

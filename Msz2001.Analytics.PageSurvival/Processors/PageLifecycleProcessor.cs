@@ -87,9 +87,9 @@ namespace Msz2001.Analytics.PageSurvival.Processors
                     { }
                     else if (logItem.Params is Dictionary<object, object?> paramsDict)
                     {
-                        if (paramsDict.TryGetValue("4::userid", out var userIdObj) && userIdObj is uint id)
+                        if (paramsDict.TryGetValue("4::userid", out var userIdObj) && userIdObj is int id)
                         {
-                            userId = id;
+                            userId = (uint)id;
                         }
                     }
 
