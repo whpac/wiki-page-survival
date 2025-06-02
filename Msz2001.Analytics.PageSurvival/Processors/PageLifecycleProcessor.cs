@@ -98,6 +98,8 @@ namespace Msz2001.Analytics.PageSurvival.Processors
                 }
             }
 
+            LogProcessingEnd(logger, i, Environment.WorkingSet / (1024.0 * 1024.0));
+
             return deletedPages.Concat(existingPages.Values);
         }
 
@@ -153,5 +155,8 @@ namespace Msz2001.Analytics.PageSurvival.Processors
 
         [LoggerMessage(Level = LogLevel.Information, Message = "Processed {Iteration} entries, using {Memory:F2} MB")]
         static partial void LogProcessingProgress(ILogger logger, int iteration, double memory);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Processing completed after {Iteration} entries, using {Memory:F2} MB")]
+        static partial void LogProcessingEnd(ILogger logger, int iteration, double memory);
     }
 }
