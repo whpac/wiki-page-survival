@@ -29,6 +29,12 @@ namespace Msz2001.Analytics.PageSurvival.Processors
                 if (i % 5000 == 0)
                     DisplayProgressMessage(i);
 
+                if (i % 1_000_000 == 0)
+                {
+                    var cutoffDate = logItem.Timestamp - TimeSpan.FromDays(720);
+                    RemoveOldRegistrations(cutoffDate);
+                }
+
                 if (logItem.Title is null) continue;
 
                 if (logItem.Type == "create" && logItem.Title.Namespace.Id == 0)
@@ -151,6 +157,13 @@ namespace Msz2001.Analytics.PageSurvival.Processors
         {
             var memory = Environment.WorkingSet / (1024.0 * 1024.0);
             LogProcessingProgress(logger, iteration, memory);
+        }
+
+        void RemoveOldRegistrations(Timestamp cutoffDate)
+        {
+            userRegistrations = userRegistrations
+                .Where(kvp => kvp.Value.Item1 >= cutoffDate || kvp.Value.Item2)
+                .ToDictionary();
         }
 
         [LoggerMessage(Level = LogLevel.Information, Message = "Processed {Iteration} entries, using {Memory:F2} MB")]
