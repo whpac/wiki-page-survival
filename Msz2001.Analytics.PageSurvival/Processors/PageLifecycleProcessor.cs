@@ -31,7 +31,7 @@ namespace Msz2001.Analytics.PageSurvival.Processors
 
                 if (i % 1_000_000 == 0)
                 {
-                    var cutoffDate = logItem.Timestamp - TimeSpan.FromDays(720);
+                    var cutoffDate = logItem.Timestamp - TimeSpan.FromDays(5 * 365 + 30); // 5 yrs + buffer
                     RemoveOldRegistrations(cutoffDate);
                 }
 
@@ -161,6 +161,10 @@ namespace Msz2001.Analytics.PageSurvival.Processors
 
         void RemoveOldRegistrations(Timestamp cutoffDate)
         {
+            // Don't bother if we have too few registrations
+            if (userRegistrations.Count < 100_000) return;
+            LogRemovingOldRegistrations(logger);
+
             userRegistrations = userRegistrations
                 .Where(kvp => kvp.Value.Item1 >= cutoffDate || kvp.Value.Item2)
                 .ToDictionary();
@@ -171,5 +175,8 @@ namespace Msz2001.Analytics.PageSurvival.Processors
 
         [LoggerMessage(Level = LogLevel.Information, Message = "Processing completed after {Iteration} entries, using {Memory:F2} MB")]
         static partial void LogProcessingEnd(ILogger logger, int iteration, double memory);
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Removing old registrations")]
+        static partial void LogRemovingOldRegistrations(ILogger logger);
     }
 }
